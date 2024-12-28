@@ -8,23 +8,22 @@
 import Foundation
 import MachO
 
-public struct FAT {
+public enum FAT {
     
-    public let headers: Array<Header>
-    
-    public init?(file: URL) {
-        guard let image = ImageReference(file: file) else { return nil }
+    public static func headers(from file: URL) -> Array<Header> {
+        guard let image = ImageReference(file: file) else { return [] }
         let fat = Pointer<fat_header>(image: image, offset: 0)
-        self.init(fat: fat)
+        return self.headers(from: fat)
     }
     
-    private init?(fat: Pointer<fat_header>) {
+    private static func headers(from fat: Pointer<fat_header>) -> Array<Header> {
         var headers = Array<Header>()
         
         let magic = fat.magic
         if magic == FAT_MAGIC || magic == FAT_CIGAM || magic == FAT_MAGIC_64 || magic == FAT_CIGAM_64 {
             // this is a fat header
             let is32Bit = (magic == FAT_MAGIC || magic == FAT_CIGAM)
+            let needsSwap = (magic == FAT_CIGAM || magic == FAT_CIGAM_64)
             
             let numberOfArches = fat.nfat_arch.bigEndian
             var archPointer: Pointer<fat_arch> = fat.advanced(by: MemoryLayout<fat_header>.size)
@@ -34,11 +33,11 @@ public struct FAT {
                 var machHeader: Header?
                 if is32Bit {
                     let thisArch = archPointer
-                    let offset = Int(thisArch.offset)
+                    let offset = Int(thisArch.offset.swapping(needsSwap))
                     machHeader = Header(pointer: thisArch.pointer(at: offset))
                 } else {
                     let thisArch = archPointer.rebound(to: fat_arch_64.self)
-                    let offset = Int(thisArch.offset)
+                    let offset = Int(thisArch.offset.swapping(needsSwap))
                     machHeader = Header(pointer: thisArch.pointer(at: offset))
                 }
                 
@@ -55,20 +54,7 @@ public struct FAT {
             }
         }
         
-        if headers.isEmpty {
-            return nil
-        }
-        
-        self.headers = headers
-    }
-    
-}
-
-
-extension FAT {
-    
-    public struct Arch {
-        
+        return headers
     }
     
 }

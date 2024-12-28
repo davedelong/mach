@@ -9,13 +9,13 @@ final class MachTests: XCTestCase {
         // Defining Test Cases and Test Methods
         // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
         
-//        let images = Dyld.images
-//        for image in images {
-//            dumpImage(image)
+//        let headers = Dyld.images
+//        for header in headers {
+//            dumpHeader(header)
 //        }
         
-        let img = FAT(file: URL(filePath: "/Applications/Base.app/Contents/MacOS/Base"))
-        for header in img?.headers ?? [] {
+        let headers = FAT.headers(from: URL(filePath: "/Applications/BBEdit.app/Contents/MacOS/BBEdit"))
+        for header in headers {
             dumpHeader(header)
         }
     }
