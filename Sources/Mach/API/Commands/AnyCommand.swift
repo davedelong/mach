@@ -7,15 +7,6 @@
 
 import Foundation
 
-/*
- LC_DATA_IN_CODE
- LC_DYLD_CHAINED_FIXUPS
- LC_DYLD_EXPORTS_TRIE
- LC_DYSYMTAB
- LC_FUNCTION_STARTS
- LC_SEGMENT_SPLIT_INFO 
- */
-
 public struct AnyCommand: Command {
     public typealias RawValue = load_command
     

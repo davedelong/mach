@@ -126,7 +126,7 @@ private let commandTypes: Dictionary<UInt32, any Command.Type> = [
     UInt32(LC_CODE_SIGNATURE): CodeSignatureCommand.self,
 //    UInt32(LC_SEGMENT_SPLIT_INFO): "LC_SEGMENT_SPLIT_INFO",
     LC_REEXPORT_DYLIB: DylibCommand.self,
-//    UInt32(LC_LAZY_LOAD_DYLIB): "LC_LAZY_LOAD_DYLIB",
+    UInt32(LC_LAZY_LOAD_DYLIB): DylibCommand.self,
 //    UInt32(LC_ENCRYPTION_INFO): "LC_ENCRYPTION_INFO",
     UInt32(LC_DYLD_INFO): DyldInfoCommand.self,
     LC_DYLD_INFO_ONLY: DyldInfoCommand.self,

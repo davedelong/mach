@@ -23,7 +23,6 @@ public enum FAT {
         if magic == FAT_MAGIC || magic == FAT_CIGAM || magic == FAT_MAGIC_64 || magic == FAT_CIGAM_64 {
             // this is a fat header
             let is32Bit = (magic == FAT_MAGIC || magic == FAT_CIGAM)
-            let needsSwap = (magic == FAT_CIGAM || magic == FAT_CIGAM_64)
             
             let numberOfArches = fat.nfat_arch.bigEndian
             var archPointer: Pointer<fat_arch> = fat.advanced(by: MemoryLayout<fat_header>.size)
@@ -33,11 +32,11 @@ public enum FAT {
                 var machHeader: Header?
                 if is32Bit {
                     let thisArch = archPointer
-                    let offset = Int(thisArch.offset.swapping(needsSwap))
+                    let offset = Int(thisArch.offset.bigEndian)
                     machHeader = Header(pointer: thisArch.pointer(at: offset))
                 } else {
                     let thisArch = archPointer.rebound(to: fat_arch_64.self)
-                    let offset = Int(thisArch.offset.swapping(needsSwap))
+                    let offset = Int(thisArch.offset.bigEndian)
                     machHeader = Header(pointer: thisArch.pointer(at: offset))
                 }
                 

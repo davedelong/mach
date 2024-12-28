@@ -15,16 +15,16 @@ public struct Dyld {
         return images.first(where: { $0.fileType == .executable })!
     }
     
-    public static var images: some Collection<Header> {
+    public static var images: Array<Header> {
         let count = _dyld_image_count()
-        return collection(count: count, next: { index -> Header in
+        return (0 ..< count).map { index in
             let rawName = _dyld_get_image_name(index)!
             let rawHeader = _dyld_get_image_header(index)!
             
             let slide = _dyld_get_image_vmaddr_slide(index)
             let image = ImageReference(name: String(cString: rawName), baseAddress: rawHeader, slide: slide)
             return Header(pointer: .init(image: image, offset: 0))!
-        })
+        }
     }
     
     public static func thisImage(_ image: UnsafeRawPointer = #dsohandle) -> Header {

@@ -7,6 +7,8 @@
 
 import Foundation
 
+#warning("This is incomplete")
+
 public struct SymbolTableCommand: Command {
     
     public typealias RawValue = symtab_command

@@ -7,6 +7,8 @@
 
 import Foundation
 
+#warning("This is incomplete")
+
 public struct DyldInfoCommand: Command {
     
     public typealias RawValue = dyld_info_command
