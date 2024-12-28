@@ -22,6 +22,8 @@ public struct Pointer<T>: Sendable, CustomStringConvertible, Comparable {
     
     internal var base: UnsafeRawPointer { image.withRawPointer(at: offset, perform: { $0 }) }
     
+    internal var name: String { image.name }
+    
     internal var fullDescription: String {
         if offset != 0 {
             return "type: \(T.self), name: \(image), offset: \(offset)"

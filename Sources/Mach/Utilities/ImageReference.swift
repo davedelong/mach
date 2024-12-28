@@ -14,7 +14,7 @@ internal final class ImageReference: Sendable, CustomStringConvertible {
         case mmapFile(Data)
     }
     
-    private let name: String
+    internal let name: String
     private let source: Source
     private let slide: Int
     
