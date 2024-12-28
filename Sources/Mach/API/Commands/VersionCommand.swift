@@ -26,6 +26,36 @@ public struct SourceVersionCommand: Command {
     
 }
 
+public struct MinimumVersionCommand: Command {
+    
+    public typealias RawValue = version_min_command
+    
+    public let header: Header
+    
+    public let commandPointer: Pointer<load_command>
+    
+    public var platform: Platform {
+        switch commandType.rawValue {
+            case UInt32(LC_VERSION_MIN_MACOSX): return .macOS
+            case UInt32(LC_VERSION_MIN_IPHONEOS): return .iOS
+            case UInt32(LC_VERSION_MIN_WATCHOS): return .watchOS
+            case UInt32(LC_VERSION_MIN_TVOS): return .tvOS
+            default: return .unknown
+        }
+    }
+    
+    public var version: Version { .init(rawValue: pointer.version.swapping(needsSwapping)) }
+    
+    public var sdk: Version { .init(rawValue: pointer.sdk.swapping(needsSwapping)) }
+    
+    public var description: String { "\(defaultDescription) - platform: \(platform), version: \(version), sdk: \(sdk)"}
+    
+    public init(header: Header, commandPointer: Pointer<load_command>) {
+        self.header = header
+        self.commandPointer = commandPointer
+    }
+}
+
 public struct BuildVersionCommand: Command {
     
     public typealias RawValue = build_version_command
