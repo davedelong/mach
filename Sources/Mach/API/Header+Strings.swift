@@ -34,7 +34,7 @@ extension Header {
         return obj as? Dictionary<String, Any>
     }
     
-    public var strings: any Sequence<String> {
+    public var strings: some Sequence<String> {
         return allSections
             .filter {
                 $0.sectionType == .cStringLiterals || $0.name == "__TEXT.__swift5reflstr"
@@ -47,25 +47,10 @@ extension Header {
                 let charPointer = pointer.rebound(to: UInt8.self)
                 
                 return sequence(state: charPointer, next: { ptr -> String? in
-                    while ptr.dereference == 0 && ptr < end {
-                        ptr = ptr.advanced(by: 1)
-                    }
-                    if ptr >= end { return nil }
-                    
-                    let startOfString = ptr
-                    var endOfString = ptr.advanced(by: 1)
-                    
-                    while endOfString.dereference != 0 && endOfString < end {
-                        endOfString = endOfString.advanced(by: 1)
-                    }
-                    
-                    if endOfString >= end { return nil }
-                    // endOfString now points to the end of the string
-                    
-                    ptr = endOfString.advanced(by: 1)
-                    return startOfString.withTypedPointer(perform: { String(cString: $0) })
+                    return String(nextString: &ptr, limitedBy: end)
                 })
             }
     }
     
 }
+

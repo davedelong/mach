@@ -77,6 +77,13 @@ public struct Pointer<T>: Sendable, CustomStringConvertible, Comparable {
         return try image.withRawPointer(at: offset, perform: body)
     }
     
+    internal func distance<R>(to other: Pointer<R>) -> Int {
+        // the number in bytes to move from self to other
+        // IOW, self.advanced(by: self.distance(to: other)) == other
+        guard self.image === other.image else { fatalError("Cannot compare pointers from different images") }
+        return other.offset - self.offset
+    }
+    
     internal func copyBytes() -> Data {
         return copyBytes(maxLength: MemoryLayout<T>.size)
     }
