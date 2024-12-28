@@ -18,9 +18,11 @@ public struct Header: CustomStringConvertible, MachObject {
         guard is32Bit || is64Bit else { return nil }
     }
     
+    public var name: String { pointer.name }
+    
     public var fileType: FileType {
         let raw = pointer.filetype.swapping(needsSwapping)
-        return FileType(rawValue: Int32(bitPattern: raw))
+        return FileType(rawValue: Int32(raw))
     }
     
     public var cpuType: Int32 { pointer.cputype.swapping(self.needsSwapping) }
