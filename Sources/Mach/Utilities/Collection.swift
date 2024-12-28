@@ -7,6 +7,20 @@
 
 import Foundation
 
+extension Collection {
+    
+    func flatMap<T>(_ transform: (Element) throws -> any Sequence<T>) rethrows -> some Sequence<T> {
+        return try self.flatMap { discretify(try transform($0)) }
+    }
+    
+}
+
+private func discretify<T>(_ sequence: any Sequence<T>) -> some Sequence<T> {
+    var anyIterator: any IteratorProtocol<T> = sequence.makeIterator()
+    let iterator = AnyIterator { anyIterator.next() }
+    return IteratorSequence(iterator)
+}
+
 func collection<I: FixedWidthInteger, T, R>(of: T.Type = T.self, count: I, startingFrom start: Pointer<R>) -> Array<Pointer<T>> {
     
     let base = start.rebound(to: T.self)

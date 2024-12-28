@@ -34,8 +34,8 @@ extension Header {
         return obj as? Dictionary<String, Any>
     }
     
-    public var strings: any Sequence<String> {
-        return commands.flatMap { $0.strings.eraseToAnySequence() }
+    public var strings: any Sequence<String> {        
+        return commands.flatMap(\.strings)
     }
     
 }
