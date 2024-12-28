@@ -11,8 +11,6 @@ public struct UUIDCommand: Command {
     
     public typealias RawValue = uuid_command
     
-    public static func matches(_ cmd: UInt32) -> Bool { cmd == LC_UUID }
-    
     public let header: Header
     
     public let commandPointer: Pointer<load_command>

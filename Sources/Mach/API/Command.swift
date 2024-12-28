@@ -8,8 +8,6 @@
 import Foundation
 
 public protocol Command: MachObject {
-    static func matches(_ cmd: UInt32) -> Bool
-    
     var header: Header { get }
     var commandPointer: Pointer<load_command> { get }
     
@@ -38,8 +36,13 @@ extension Command {
     public var description: String { defaultDescription }
     
     public init?(_ other: any Command) {
-        guard Self.matches(other.commandType.rawValue) else { return nil }
-        self.init(header: other.header, commandPointer: other.commandPointer)
+        let rawCmd = other.commandType.rawValue
+        let expectedType = command(for: rawCmd)
+        if Self.self == AnyCommand.self || Self.self == expectedType {
+            self.init(header: other.header, commandPointer: other.commandPointer)
+        } else {
+            return nil
+        }
     }
     
 }

@@ -11,8 +11,6 @@ public struct SubUmbrellaCommand: Command {
     
     public typealias RawValue = sub_umbrella_command
     
-    public static func matches(_ cmd: UInt32) -> Bool { cmd == LC_SUB_UMBRELLA }
-    
     public let header: Header
     
     public let commandPointer: Pointer<load_command>
@@ -31,8 +29,6 @@ public struct SubUmbrellaCommand: Command {
 public struct SubFrameworkCommand: Command {
     
     public typealias RawValue = sub_framework_command
-    
-    public static func matches(_ cmd: UInt32) -> Bool { cmd == LC_SUB_FRAMEWORK }
     
     public let header: Header
     
@@ -53,8 +49,6 @@ public struct SubClientCommand: Command {
     
     public typealias RawValue = sub_client_command
     
-    public static func matches(_ cmd: UInt32) -> Bool { cmd == LC_SUB_CLIENT }
-    
     public let header: Header
     
     public let commandPointer: Pointer<load_command>
@@ -73,8 +67,6 @@ public struct SubClientCommand: Command {
 public struct SubLibraryCommand: Command {
     
     public typealias RawValue = sub_library_command
-    
-    public static func matches(_ cmd: UInt32) -> Bool { cmd == LC_SUB_LIBRARY }
     
     public let header: Header
     

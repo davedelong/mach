@@ -11,8 +11,6 @@ public struct MainCommand: Command {
     
     public typealias RawValue = entry_point_command
     
-    public static func matches(_ cmd: UInt32) -> Bool { cmd == LC_MAIN }
-    
     public let header: Header
     
     public let commandPointer: Pointer<load_command>

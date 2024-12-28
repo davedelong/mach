@@ -11,10 +11,6 @@ public struct DylibCommand: Command {
     
     public typealias RawValue = dylib_command
     
-    public static func matches(_ cmd: UInt32) -> Bool {
-        return cmd == LC_LOAD_DYLIB || cmd == LC_LOAD_WEAK_DYLIB || cmd == LC_ID_DYLIB || cmd == LC_LOAD_UPWARD_DYLIB || cmd == LC_REEXPORT_DYLIB
-    }
-    
     public let header: Header
     
     public let commandPointer: Pointer<load_command>

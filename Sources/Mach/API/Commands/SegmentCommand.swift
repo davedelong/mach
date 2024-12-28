@@ -11,8 +11,6 @@ public struct SegmentCommand: Command {
     
     public typealias RawValue = segment_command
     
-    public static func matches(_ cmd: UInt32) -> Bool { cmd == LC_SEGMENT || cmd == LC_SEGMENT_64 }
-    
     public let header: Header
     
     public let commandPointer: Pointer<load_command>

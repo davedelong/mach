@@ -11,8 +11,6 @@ public struct SymbolTableCommand: Command {
     
     public typealias RawValue = symtab_command
     
-    public static func matches(_ cmd: UInt32) -> Bool { cmd == LC_SYMTAB }
-    
     public let header: Header
     
     public let commandPointer: Pointer<load_command>

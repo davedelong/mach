@@ -11,8 +11,6 @@ public struct RPathCommand: Command {
     
     public typealias RawValue = rpath_command
     
-    public static func matches(_ cmd: UInt32) -> Bool { cmd == LC_RPATH }
-    
     public let header: Header
     
     public let commandPointer: Pointer<load_command>

@@ -11,8 +11,6 @@ public struct CodeSignatureCommand: Command {
     
     public typealias RawValue = linkedit_data_command
     
-    public static func matches(_ cmd: UInt32) -> Bool { cmd == LC_CODE_SIGNATURE }
-    
     public let header: Header
     
     public let commandPointer: Pointer<load_command>

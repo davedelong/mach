@@ -11,8 +11,6 @@ public struct SourceVersionCommand: Command {
     
     public typealias RawValue = source_version_command
     
-    public static func matches(_ cmd: UInt32) -> Bool { cmd == LC_SOURCE_VERSION }
-    
     public let header: Header
     
     public let commandPointer: Pointer<load_command>
@@ -31,8 +29,6 @@ public struct SourceVersionCommand: Command {
 public struct BuildVersionCommand: Command {
     
     public typealias RawValue = build_version_command
-    
-    public static func matches(_ cmd: UInt32) -> Bool { cmd == LC_BUILD_VERSION }
     
     public let header: Header
     
