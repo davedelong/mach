@@ -15,9 +15,11 @@ public struct SubUmbrellaCommand: Command {
     
     public let commandPointer: Pointer<load_command>
     
-    public var umbrella: String { readLCString(\.sub_umbrella) }
+    public var subUmbrella: String { readLCString(\.sub_umbrella) }
     
-    public var description: String { "\(defaultDescription) - \(umbrella)" }
+    public var strings: any Sequence<String> { [subUmbrella] }
+    
+    public var description: String { "\(defaultDescription) - \(subUmbrella)" }
     
     public init(header: Header, commandPointer: Pointer<load_command>) {
         self.header = header
@@ -35,6 +37,8 @@ public struct SubFrameworkCommand: Command {
     public let commandPointer: Pointer<load_command>
     
     public var umbrella: String { readLCString(\.umbrella) }
+    
+    public var strings: any Sequence<String> { [umbrella] }
     
     public var description: String { "\(defaultDescription) - \(umbrella)" }
     
@@ -55,6 +59,8 @@ public struct SubClientCommand: Command {
     
     public var client: String { readLCString(\.client) }
     
+    public var strings: any Sequence<String> { [client] }
+    
     public var description: String { "\(defaultDescription) - \(client)" }
     
     public init(header: Header, commandPointer: Pointer<load_command>) {
@@ -72,9 +78,11 @@ public struct SubLibraryCommand: Command {
     
     public let commandPointer: Pointer<load_command>
     
-    public var library: String { readLCString(\.sub_library) }
+    public var subLibrary: String { readLCString(\.sub_library) }
     
-    public var description: String { "\(defaultDescription) - \(library)" }
+    public var strings: any Sequence<String> { [subLibrary] }
+    
+    public var description: String { "\(defaultDescription) - \(subLibrary)" }
     
     public init(header: Header, commandPointer: Pointer<load_command>) {
         self.header = header

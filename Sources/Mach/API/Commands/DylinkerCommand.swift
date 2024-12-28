@@ -17,6 +17,8 @@ public struct DylinkerCommand: Command {
     
     public var name: String { readLCString(\.name) }
     
+    public var strings: any Sequence<String> { [name] }
+    
     public var description: String { "\(defaultDescription) - \(name)" }
     
     public init(header: Header, commandPointer: Pointer<load_command>) {

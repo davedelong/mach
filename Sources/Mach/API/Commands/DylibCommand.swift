@@ -17,6 +17,8 @@ public struct DylibCommand: Command {
     
     public var name: String { readLCString(\.dylib.name) }
     
+    public var strings: any Sequence<String> { [name] }
+    
     public var timestamp: Date {
         Date(timeIntervalSince1970: Double(pointer.dylib.timestamp.swapping(needsSwapping)))
     }

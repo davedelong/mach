@@ -17,6 +17,8 @@ public struct UUIDCommand: Command {
     
     public var uuid: UUID { UUID(uuid: pointer.uuid) }
     
+    public var strings: any Sequence<String> { [uuid.uuidString] }
+    
     public var description: String { "\(defaultDescription) - \(uuid)" }
     
     public init(header: Header, commandPointer: Pointer<load_command>) {

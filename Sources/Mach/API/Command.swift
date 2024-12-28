@@ -10,6 +10,7 @@ import Foundation
 public protocol Command: MachObject {
     var header: Header { get }
     var commandPointer: Pointer<load_command> { get }
+    var strings: any Sequence<String> { get }
     
     init(header: Header, commandPointer: Pointer<load_command>)
     
@@ -19,6 +20,8 @@ public protocol Command: MachObject {
 extension Command {
     
     public var pointer: Pointer<RawValue> { commandPointer.rebound() }
+    
+    public var strings: any Sequence<String> { [] }
     
     public var commandType: CommandType {
         let rawValue = commandPointer.cmd.swapping(needsSwapping)

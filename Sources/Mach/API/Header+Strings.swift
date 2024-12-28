@@ -34,22 +34,8 @@ extension Header {
         return obj as? Dictionary<String, Any>
     }
     
-    public var strings: some Sequence<String> {
-        return allSections
-            .filter {
-                $0.sectionType == .cStringLiterals || $0.name == "__TEXT.__swift5reflstr"
-            }
-            .flatMap { section in
-                let size = section.dataSize
-                let pointer = section.dataPointer
-                let end = pointer.advanced(by: Int(size))
-                
-                let charPointer = pointer.rebound(to: UInt8.self)
-                
-                return sequence(state: charPointer, next: { ptr -> String? in
-                    return String(nextString: &ptr, limitedBy: end)
-                })
-            }
+    public var strings: any Sequence<String> {
+        return commands.flatMap { $0.strings.eraseToAnySequence() }
     }
     
 }
