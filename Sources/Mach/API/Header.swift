@@ -53,6 +53,10 @@ public struct Header: CustomStringConvertible, MachObject {
         })
     }
     
+    internal func pointer<T>(of type: T.Type = T.self, at headerOffset: some FixedWidthInteger) -> Pointer<T> {
+        return pointer.advanced(by: headerOffset)
+    }
+    
 }
 
 public struct FileType: RawRepresentable, CustomStringConvertible {

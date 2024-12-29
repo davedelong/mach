@@ -93,6 +93,15 @@ extension Command {
     }
 }
 
+/*
+ 
+ This file is very useful for identifying the mapping between LC_* types and 
+ their Mach-O structures, if the documentation itself is unclear:
+ https://github.com/apple-oss-distributions/cctools/blob/main/libstuff/ofile.c#L3961
+ 
+ 
+ */
+
 private let commandTypes: Dictionary<UInt32, any Command.Type> = [
 //    LC_REQ_DYLD: "LC_REQ_DYLD",
     UInt32(LC_SEGMENT): SegmentCommand.self,
