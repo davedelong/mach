@@ -26,10 +26,10 @@ public struct Version: CustomStringConvertible {
         /* A.B.C.D.E packed as a24.b10.c10.d10.e10 */
         self.pieces = [
             Int((rawValue >> 40) & 0xFFFFFF),
-            Int((rawValue >> 30) & 0x3F),
-            Int((rawValue >> 20) & 0x3F),
-            Int((rawValue >> 10) & 0x3F),
-            Int(rawValue & 0x3F)
+            Int((rawValue >> 30) & 0x3FF),
+            Int((rawValue >> 20) & 0x3FF),
+            Int((rawValue >> 10) & 0x3FF),
+            Int(rawValue & 0x3FF)
         ]
     }
     
