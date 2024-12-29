@@ -50,7 +50,7 @@ public struct SegmentCommand: Command {
         }
     }
     
-    public var sections: Array<Section> {
+    public var sections: any Collection<Section> {
         if is64Bit {
             let cmd = pointer.rebound(to: segment_command_64.self)
             let sectionCount = cmd.nsects.swapping(needsSwapping)

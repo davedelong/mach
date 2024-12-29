@@ -75,10 +75,10 @@ public struct BuildVersionCommand: Command {
         self.commandPointer = commandPointer
     }
     
-    public var tools: any Collection<BuildToolVersion> {
+    public var tools: Array<BuildToolVersion> {
         let numberOfTools = pointer.ntools
         let toolStart = pointer.advanced(by: MemoryLayout<build_version_command>.size).rebound(to: build_tool_version.self)
-        return collection(count: numberOfTools, startingFrom: toolStart).map { ptr in
+        return collection(of: build_tool_version.self, count: numberOfTools, startingFrom: toolStart).map { ptr in
             BuildToolVersion(header: self.header, pointer: ptr)
         }
     }

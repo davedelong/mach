@@ -15,13 +15,13 @@ extension Collection {
     
 }
 
-private func discretify<T>(_ sequence: any Sequence<T>) -> some Sequence<T> {
+func discretify<T>(_ sequence: any Sequence<T>) -> some Sequence<T> {
     var anyIterator: any IteratorProtocol<T> = sequence.makeIterator()
     let iterator = AnyIterator { anyIterator.next() }
     return IteratorSequence(iterator)
 }
 
-func collection<I: FixedWidthInteger, T, R>(of: T.Type = T.self, count: I, startingFrom start: Pointer<R>) -> Array<Pointer<T>> {
+func collection<I: FixedWidthInteger, T, R>(of: T.Type = T.self, count: I, startingFrom start: Pointer<R>) -> any Collection<Pointer<T>> {
     
     let base = start.rebound(to: T.self)
     return collection(count: count, state: base, next: { state -> Pointer<T> in
@@ -30,15 +30,15 @@ func collection<I: FixedWidthInteger, T, R>(of: T.Type = T.self, count: I, start
     })
 }
 
-func collection<I: FixedWidthInteger, T>(count: I, next: @escaping (I) -> T) -> Array<T> {
+func collection<I: FixedWidthInteger, T>(count: I, next: @escaping (I) -> T) -> any Collection<T> {
     return Array(UnfoldCollection(count: Int(count), initial: I.zero, next: { idx in
         defer { idx += 1 }
         return next(idx)
     }))
 }
 
-func collection<I: FixedWidthInteger, T, State>(count: I, state: State, next: @escaping (inout State) -> T) -> Array<T> {
-    return Array(UnfoldCollection(count: Int(count), initial: state, next: next))
+func collection<I: FixedWidthInteger, T, State>(count: I, state: State, next: @escaping (inout State) -> T) -> any Collection<T> {
+    return UnfoldCollection(count: Int(count), initial: state, next: next)
 }
 
 struct UnfoldCollection<Element, State>: Collection {

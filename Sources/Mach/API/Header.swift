@@ -38,7 +38,7 @@ public struct Header: CustomStringConvertible, MachObject {
     
     public var description: String { "Header { \(pointer.fullDescription) }" }
     
-    public var commands: Array<any Command> {
+    public var commands: any Collection<any Command> {
         let count = self.pointer.ncmds
         let headerSize = self.is64Bit ? MemoryLayout<mach_header_64>.size : MemoryLayout<mach_header>.size
         let pointer: Pointer<load_command> = self.pointer.advanced(by: headerSize)

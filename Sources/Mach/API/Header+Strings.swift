@@ -11,11 +11,11 @@ extension Header {
     
     public var allSections: Array<Section> {
         let segments = self.commands.compactMap { $0 as? SegmentCommand }
-        return segments.flatMap(\.sections)
+        return segments.flatMap { discretify($0.sections) }
     }
     
     public var codeSignature: CodeSignatureCommand? {
-        return self.commands.lazy.compactMap { $0 as? CodeSignatureCommand }.first
+        return self.commands.compactMap { $0 as? CodeSignatureCommand }.first
     }
     
     public var entitlements: Dictionary<String, Any>? {
@@ -35,7 +35,7 @@ extension Header {
     }
     
     public var strings: any Sequence<String> {        
-        return commands.flatMap(\.strings)
+        return commands.flatMap { discretify($0.strings) }
     }
     
 }

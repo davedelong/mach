@@ -48,18 +48,18 @@ public struct Pointer<T>: Sendable, CustomStringConvertible, Comparable {
         })
     }
     
-    public func pointer<R>(of type: R.Type = R.self, at newOffset: Int) -> Pointer<R> {
-        return Pointer<R>(image: image, offset: newOffset)
+    public func pointer<R>(of type: R.Type = R.self, at newOffset: some FixedWidthInteger) -> Pointer<R> {
+        return Pointer<R>(image: image, offset: Int(newOffset))
     }
     
-    public func advanced<I: FixedWidthInteger>(by relative: I) -> Pointer<T> {
+    public func advanced(by relative: some FixedWidthInteger) -> Pointer<T> {
         let newOffset = offset + Int(relative)
         guard newOffset >= 0 else { fatalError("Tried to advanced to negative offset") }
         return Pointer(image: image, offset: newOffset)
     }
     
     @_disfavoredOverload
-    public func advanced<R, I: FixedWidthInteger>(by relative: I) -> Pointer<R> {
+    public func advanced<R>(by relative: some FixedWidthInteger) -> Pointer<R> {
         let newOffset = offset + Int(relative)
         guard newOffset >= 0 else { fatalError("Tried to advanced to negative offset") }
         return Pointer<R>(image: image, offset: newOffset)
