@@ -35,7 +35,7 @@ final class MachTests: XCTestCase {
                 }
             } else if let sym = command as? SymbolTableCommand {
                 for symbol in sym.symbols {
-                    print("\t\t", symbol.string)
+                    print("\t\t", symbol.name)
                 }
             }
         }

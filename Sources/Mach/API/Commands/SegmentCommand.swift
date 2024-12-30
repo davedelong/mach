@@ -22,15 +22,7 @@ public struct SegmentCommand: Command {
     public var strings: any Sequence<String> {
         let textSections = sections.filter { $0.sectionType == .cStringLiterals || $0.name == "__TEXT.__swift5_reflstr" }
         return textSections.flatMap { section in
-            let size = section.dataSize
-            let pointer = section.dataPointer
-            let end = pointer.advanced(by: Int(size))
-            
-            let charPointer = pointer.rebound(to: UInt8.self)
-            
-            return sequence(state: charPointer, next: { ptr -> String? in
-                return String(nextString: &ptr, limitedBy: end)
-            })
+            return StringTable(start: section.dataPointer, size: section.dataSize)
         }
     }
     
