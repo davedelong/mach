@@ -36,7 +36,7 @@ public struct CodeSignatureCommand: Command {
         guard dataSize > 0 else { return nil }
         
         let offset = pointer.dataoff.swapping(needsSwapping)
-        return header.pointer.advanced(by: offset)
+        return header.pointer(at: offset)
     }
     
     public var codeSignature: Dictionary<String, Any>? {

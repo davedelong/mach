@@ -20,7 +20,7 @@ public struct SegmentCommand: Command {
     private var is64Bit: Bool { self.commandType.rawValue == LC_SEGMENT_64 }
     
     public var strings: any Sequence<String> {
-        let textSections = sections.filter { $0.sectionType == .cStringLiterals || $0.name == "__TEXT.__swift5_reflstr" }
+        let textSections = sections.filter(\.likelyContainsStrings)
         return textSections.flatMap { section in
             return StringTable(start: section.dataPointer, size: section.dataSize)
         }
@@ -66,6 +66,33 @@ public struct SegmentCommand: Command {
         self.commandPointer = commandPointer
     }
     
+    internal var vmRange: Range<UInt64> {
+        if is64Bit {
+            let p = pointer.rebound(to: segment_command_64.self)
+            let offset = UInt64(p.vmaddr.swapping(needsSwapping))
+            let size = UInt64(p.vmsize.swapping(needsSwapping))
+            
+            return offset ..< (offset + size)
+        } else {
+            let offset = UInt64(pointer.vmaddr.swapping(needsSwapping))
+            let size = UInt64(pointer.vmsize.swapping(needsSwapping))
+            return offset ..< (offset + size)
+        }
+    }
+    
+    internal var fileRange: Range<UInt64> {
+        if is64Bit {
+            let p = pointer.rebound(to: segment_command_64.self)
+            let offset = UInt64(p.fileoff.swapping(needsSwapping))
+            let size = UInt64(p.filesize.swapping(needsSwapping))
+            return offset ..< (offset + size)
+        } else {
+            let offset = UInt64(pointer.fileoff.swapping(needsSwapping))
+            let size = UInt64(pointer.filesize.swapping(needsSwapping))
+            return offset ..< (offset + size)
+        }
+    }
+    
 }
 
 public struct Section: MachObject {
@@ -100,6 +127,12 @@ public struct Section: MachObject {
     
     public var name: String { segmentName + "." + sectionName }
     
+    internal var likelyContainsStrings: Bool {
+        if self.sectionType == .cStringLiterals { return true }
+        if self.name == "__TEXT.__swift5_reflstr" { return true }
+        return false
+    }
+    
     public var sectionType: SectionType {
         return SectionType(rawValue: UInt8(self.flags & UInt32(SECTION_TYPE)))
     }
@@ -113,10 +146,10 @@ public struct Section: MachObject {
     public var dataPointer: Pointer<UInt8> {
         if header.is64Bit {
             let offset = pointer.rebound(to: section_64.self).offset.swapping(header.needsSwapping)
-            return header.pointer.advanced(by: offset)
+            return header.pointer(at: offset)
         } else {
             let offset = pointer.offset.swapping(header.needsSwapping)
-            return header.pointer.advanced(by: offset)
+            return header.pointer(at: offset)
         }
     }
     

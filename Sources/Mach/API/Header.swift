@@ -8,6 +8,13 @@ public struct Header: CustomStringConvertible, MachObject {
     
     public let pointer: Pointer<mach_header>
     
+    // a map of fileOffset + sizes to new offsets
+    // if an offset to a pointer falls within the range, it has the
+    // offset value added to it to find its in-memory offset.
+    // This is to support how LC_SEGMENT commands have their data chunks
+    // mapped into specific memory ranges (specified by their vmaddr field)
+    private var offsetMaps: Dictionary<Range<UInt64>, UInt64>
+    
     internal var magic: UInt32 { pointer.magic }
     internal var is32Bit: Bool { magic == MH_MAGIC || magic == MH_CIGAM }
     internal var is64Bit: Bool { magic == MH_MAGIC_64 || magic == MH_CIGAM_64 }
@@ -15,7 +22,20 @@ public struct Header: CustomStringConvertible, MachObject {
     
     public init?(pointer: Pointer<RawValue>) {
         self.pointer = pointer
+        self.offsetMaps = [:]
         guard is32Bit || is64Bit else { return nil }
+        
+        if pointer.isImageLoaded {
+            for command in commands {
+                if let segment = command as? SegmentCommand {
+                    let fileRange = segment.fileRange
+                    let vmRange = segment.vmRange
+                    
+                    let vmDelta = vmRange.lowerBound - fileRange.lowerBound
+                    offsetMaps[fileRange] = vmDelta
+                }
+            }
+        }
     }
     
     public var name: String { pointer.name }
@@ -53,8 +73,9 @@ public struct Header: CustomStringConvertible, MachObject {
         })
     }
     
-    internal func pointer<T>(of type: T.Type = T.self, at headerOffset: some FixedWidthInteger) -> Pointer<T> {
-        return pointer.advanced(by: headerOffset)
+    internal func pointer<T>(of type: T.Type = T.self, at fileOffset: some FixedWidthInteger) -> Pointer<T> {
+        let delta = offsetMaps.first(where: { $0.key.contains(UInt64(fileOffset)) })?.value ?? 0
+        return pointer.advanced(by: UInt64(fileOffset) + delta)
     }
     
 }

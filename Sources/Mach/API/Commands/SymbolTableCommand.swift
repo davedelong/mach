@@ -63,7 +63,9 @@ public struct Symbol {
     public let name: String
     
     public var isSymbolicDebuggingEntry: Bool { (Int32(rawType) & N_STAB) != 0 }
+    
     public var isPrivateExternalSymbol: Bool { (Int32(rawType) & N_PEXT) == N_PEXT }
+    
     public var isExternalSymbol: Bool { (Int32(rawType) & N_EXT) == N_EXT }
     
     public var symbolType: SymbolType {
@@ -80,6 +82,7 @@ public struct Symbol {
     private  var rawType: UInt8 { pointer.n_type.swapping(header.needsSwapping) }
     private var rawSect: UInt8 { pointer.n_sect.swapping(header.needsSwapping) }
     private var rawDesc: UInt16 { UInt16(pointer.n_desc.swapping(header.needsSwapping)) }
+    
     private var rawValue: UInt64 {
         if header.is64Bit {
             return pointer.rebound(to: nlist_64.self).n_value.swapping(header.needsSwapping)

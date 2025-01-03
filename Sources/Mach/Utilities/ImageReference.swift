@@ -18,6 +18,11 @@ internal final class ImageReference: Sendable, CustomStringConvertible {
     private let source: Source
     private let slide: Int
     
+    internal var isLoaded: Bool {
+        if case .loadedImage = source { return true }
+        return false
+    }
+    
     var description: String {
         switch source {
             case .loadedImage(let ptr): return "\(name) @ \(ptr)"
