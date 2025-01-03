@@ -95,6 +95,7 @@ public struct Symbol {
         // both nlist and nlist_64 have a UInt32 at the same offset for the string index
         let stringOffset = Int(pointer.n_un.n_strx.swapping(header.needsSwapping))
         
+        // this is off by 0x8000 ?!
         if stringOffset == 0 {
             self.name = ""
         } else {

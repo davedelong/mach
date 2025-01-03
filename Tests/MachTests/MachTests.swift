@@ -14,7 +14,10 @@ final class MachTests: XCTestCase {
 //            dumpHeader(header)
 //        }
         
-        let headers = FAT.headers(from: URL(filePath: "/Applications/BBEdit.app/Contents/MacOS/BBEdit"))
+        var headers = FAT.headers(from: URL(filePath: "/Applications/BBEdit.app/Contents/MacOS/BBEdit"))
+        let thisImage = Dyld.thisImage()
+//        headers = FAT.headers(from: URL(filePath: thisImage.name))
+        headers = [thisImage]
         for header in headers {
             dumpHeader(header)
         }
@@ -35,7 +38,7 @@ final class MachTests: XCTestCase {
                 }
             } else if let sym = command as? SymbolTableCommand {
                 for symbol in sym.symbols {
-                    print("\t\t", symbol.name)
+                    print("\t\t", symbol.name, "External:", symbol.isExternalSymbol)
                 }
             }
         }
